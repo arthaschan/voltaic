@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# 离线安装与运行脚本（方案三：包内自带 Python 3.11 运行时，不依赖目标机系统 Python）。
+# 离线安装（服务版）：包内自带 Python 3.11 运行时 + 全部依赖 + /predict 推理服务。
 # 前置：已解压 excharge-offline.tar.gz，脚本位于解压后的顶层目录。
-# 用法：bash offline_install.sh
+# 用法：bash offline_install.sh     # 一次性：建 venv → 离线装依赖 → 验证
+# 之后用 bash start_service.sh 启动服务，bash test_api.sh 测试。
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -18,25 +19,22 @@ fi
 
 # 2) 建 venv（若已存在则复用）
 if [ ! -d ".venv" ]; then
-  echo "==> 创建虚拟环境（基于 $("$PY" --version 2>&1)）"
+  echo "==> 创建虚拟环境（$("$PY" --version 2>&1)）"
   "$PY" -m venv .venv
 fi
 # shellcheck disable=SC1091
 source .venv/bin/activate
 
 # 3) 离线安装依赖（--no-index 强制只从 wheels/ 取，绝不联网）
-echo "==> 离线安装基础依赖"
+echo "==> 离线安装全部依赖（含 flask/matplotlib/torch）"
 python -m pip install --no-index --find-links wheels/ -r code/requirements.txt
-echo "==> 离线安装 torch（CPU 版）"
 python -m pip install --no-index --find-links wheels/ torch
 
-# 4) 验证
+# 4) 验证依赖
 echo "==> 验证依赖"
-python -c "import torch, lightgbm, sklearn, pandas; print('  torch', torch.__version__, '| lightgbm', lightgbm.__version__, '| pandas', pandas.__version__)"
+python -c "import torch, lightgbm, sklearn, pandas, flask, matplotlib; print('  torch', torch.__version__, '| lgb', lightgbm.__version__, '| flask', flask.__version__)"
 
-# 5) 运行 benchmark
-echo "==> 运行 7 模型 benchmark"
-cd "$ROOT/code"
-python run_merged_benchmark.py
-
-echo "==> 完成，结果见 $ROOT/predictions/merged_benchmark.json"
+echo ""
+echo "==> 安装完成。下一步："
+echo "    启动服务：  bash start_service.sh"
+echo "    测试接口：  bash test_api.sh http://127.0.0.1:8000"
