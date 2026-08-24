@@ -16,6 +16,11 @@ wheels/
 excharge-pred.tar.gz
 dist/
 
+# 服务运行时产物与预训练模型（可现场训练再生）
+code/models_zoo/
+code/uploads/
+code/predictions_ui/
+
 # 文档源文件（docx/pdf 体积大，按需决定是否入库）
 # *.docx
 # *.pdf
