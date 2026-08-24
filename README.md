@@ -44,3 +44,18 @@ charging_power_dataset_V2/
 cd code
 python run_merged_benchmark.py
 ```
+
+> 代码已改为**相对路径自适应**（不再依赖 macOS 绝对路径），可在任意 Linux 机器/容器内直接运行。
+
+## 部署到 H20（离线）
+
+**先看这一份总说明**：`部署总说明.md`（整合了兼容性分析 + 两个方案 + 推送分发 + 实测结果 + 文件位置）。
+
+分篇细节：
+
+- `docs/deploy/00_总览与H20兼容性分析.md` — 结论 + 环境对比 + 为什么可直接迁移
+- `docs/deploy/01_方案一_离线Python环境部署.md` — 离线 wheel 包方式
+- `docs/deploy/02_方案二_Docker镜像部署.md` — Docker 镜像方式（推荐）
+- `docs/deploy/03_镜像推送与仓库分发.md` — 镜像大文件如何进 git/仓库
+- `code/build_image.sh` — 一键构建+导出镜像（在 H20 上执行）
+- `offline_install.sh` — H20 离线安装+运行（方案一）

@@ -9,20 +9,22 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import f1_score
 
+# ---- 路径解析（相对脚本自身位置，跨机器/容器可移植）----
+HERE = os.path.dirname(os.path.abspath(__file__))   # code/
+ROOT = os.path.dirname(HERE)                          # 项目根目录
+
 # ---- 我的模型库 ----
-MY = '/Users/arthas/git/photovoltaic/charging_power_dataset/scripts'
-sys.path.insert(0, MY)
+sys.path.insert(0, HERE)
 import model_zoo as myz
 
 # ---- 教授的模型库（用 importlib 显式加载，避免与我的 model_zoo 同名冲突）----
-PROF = '/Users/arthas/git/photovoltaic/charging_power_dataset_delivery_V1/code'
 import importlib.util
-_spec = importlib.util.spec_from_file_location('professor_model_zoo', PROF + '/model_zoo.py')
+_spec = importlib.util.spec_from_file_location('professor_model_zoo', os.path.join(HERE, 'professor_model_zoo.py'))
 pmz = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(pmz)
 
-DATA = '/Users/arthas/git/photovoltaic/charging_power_dataset_full_15min/data'
-GT = '/Users/arthas/git/photovoltaic/charging_power_dataset_full_15min/ground_truth'
+DATA = os.path.join(ROOT, 'dataset', 'data')
+GT = os.path.join(ROOT, 'dataset', 'ground_truth')
 
 
 def evaluate(y_true, y_pred):
@@ -151,6 +153,15 @@ def gru_seq_fast(gf, cal, epochs=30):
 
 
 def main():
+    # 固定随机种子：保证跨机器（H100/H20）结果可复现。
+    # 注：深度学习模型（GRU/PatchTST/TimesNet）此前未设种子，逐次运行有微小波动；
+    #     此处固定种子后同机可逐位复现；跨不同 CPU/BLAS 仍可能有浮点非结合性造成的极小差异。
+    import random
+    import torch
+    random.seed(42)
+    np.random.seed(42)
+    torch.manual_seed(42)
+
     ids = sorted([f.replace('case_', '').replace('.csv', '') for f in os.listdir(DATA)
                   if f.startswith('case_') and f.endswith('.csv')])
     n = len(ids)
@@ -234,7 +245,7 @@ def main():
         summary[m] = dict(MAE=round(ma,2), RMSE=round(rm,2), WAPE=round(wa,4), MAPE_nz=round(mp,1), F1=round(f1,3))
         print(f"{m:<14} {ma:>7.2f} {rm:>7.2f} {wa:>7.3f} {mp:>8.1f} {f1:>6.3f}")
 
-    out = '/Users/arthas/git/photovoltaic/charging_power_dataset/predictions/merged_benchmark.json'
+    out = os.path.join(ROOT, 'predictions', 'merged_benchmark.json')
     json.dump(summary, open(out, 'w'), ensure_ascii=False, indent=2)
     print(f"\n结果已保存 {out}")
 

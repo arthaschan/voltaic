@@ -1,0 +1,12 @@
+# 构建上下文排除项（docker build -f code/Dockerfile .）
+.venv/
+.git/
+**/__pycache__/
+*.pyc
+.code/
+docs/
+*.docx
+*.pdf
+wheels/
+dist/
+*.tar.gz
