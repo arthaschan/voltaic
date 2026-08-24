@@ -1,0 +1,101 @@
+{
+  "dataset_id": "charging_power_full_15min_2024",
+  "dataset_name": "车网互动充电功率预测数据集（全量，源自 Autosun 深圳充电站）",
+  "version": "1.0.0",
+  "provider": "深圳 Autosun 充电站（开源数据）",
+  "contact": "nurry@139.com",
+  "upload_date": "2026-08-20",
+  "modality": "tabular",
+  "data_format": "csv",
+  "case_count": 28,
+  "has_ground_truth": true,
+  "evaluation": {
+    "task_type": "forecasting",
+    "metrics": [
+      "mape"
+    ],
+    "horizons": [
+      "2h",
+      "4h",
+      "1d",
+      "4d"
+    ],
+    "horizon_steps": [
+      8,
+      16,
+      96,
+      384
+    ]
+  },
+  "structure": {
+    "data": {
+      "location": "data/",
+      "files": [
+        "case_001.csv",
+        "case_002.csv",
+        "case_003.csv",
+        "case_004.csv",
+        "case_005.csv",
+        "case_006.csv",
+        "case_007.csv",
+        "case_008.csv",
+        "case_009.csv",
+        "case_010.csv",
+        "case_011.csv",
+        "case_012.csv",
+        "case_013.csv",
+        "case_015.csv",
+        "case_016.csv",
+        "case_017.csv",
+        "case_019.csv",
+        "case_020.csv",
+        "case_021.csv",
+        "case_022.csv",
+        "case_023.csv",
+        "case_024.csv",
+        "case_025.csv",
+        "case_026.csv",
+        "case_027.csv",
+        "case_028.csv",
+        "case_029.csv",
+        "case_030.csv"
+      ],
+      "columns": 28
+    },
+    "ground_truth": {
+      "location": "ground_truth/",
+      "files": [
+        "case_001.csv",
+        "case_002.csv",
+        "case_003.csv",
+        "case_004.csv",
+        "case_005.csv",
+        "case_006.csv",
+        "case_007.csv",
+        "case_008.csv",
+        "case_009.csv",
+        "case_010.csv",
+        "case_011.csv",
+        "case_012.csv",
+        "case_013.csv",
+        "case_015.csv",
+        "case_016.csv",
+        "case_017.csv",
+        "case_019.csv",
+        "case_020.csv",
+        "case_021.csv",
+        "case_022.csv",
+        "case_023.csv",
+        "case_024.csv",
+        "case_025.csv",
+        "case_026.csv",
+        "case_027.csv",
+        "case_028.csv",
+        "case_029.csv",
+        "case_030.csv"
+      ],
+      "columns": 4
+    }
+  },
+  "notes": "全量转换：超大场站(440201004000,占95%)按日期切30段(每段~41天) + 其余110场站分4组 = 28 case；每 case data 跨度强制30天+gt 4天+末日7天连续；无放电(纯充电)。"
+}
