@@ -7,6 +7,10 @@ __pycache__/
 # 交接包（本机 mac 打包，约 1.3G，勿入库）
 handover.zip
 
+# SSH 私钥（切勿入库）
+arthas.pem
+*.pem
+
 # 部署构建产物（可重新生成；离线包 excharge-offline.tar.gz 走 git-lfs 单独跟踪）
 wheels/
 excharge-pred.tar.gz
